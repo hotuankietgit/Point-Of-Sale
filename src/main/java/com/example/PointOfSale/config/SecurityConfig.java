@@ -52,6 +52,7 @@ public class SecurityConfig {
                 authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin/*").hasAuthority("Admin")
                         .requestMatchers("/agent/*").hasAuthority("Agent")
+                        .requestMatchers("/temp/*").hasAuthority("Agent")
                         .requestMatchers("/home").authenticated()
                         .requestMatchers(HttpMethod.POST,"/staff/login").permitAll()
                         .anyRequest().permitAll()).
