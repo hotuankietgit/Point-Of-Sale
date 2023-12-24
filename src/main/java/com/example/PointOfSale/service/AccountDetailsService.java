@@ -1,10 +1,12 @@
 package com.example.PointOfSale.service;
 
+import com.example.PointOfSale.dao.AccountListingRepository;
 import com.example.PointOfSale.dao.AccountRepository;
 import com.example.PointOfSale.model.Account;
 import com.example.PointOfSale.model.AccountDetails;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,12 +15,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AccountDetailsService implements UserDetailsService {
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AccountListingRepository accountListingRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -40,8 +46,12 @@ public class AccountDetailsService implements UserDetailsService {
         return new AccountDetails(account);
     }
 
-    public Account getEmployee(String email){
+    public Account getEmployeeByEmail(String email){
         return accountRepository.findByEmail(email);
+    }
+
+    public Account getEmployeeByUserame(String username){
+        return accountRepository.getAccountByUsername(username);
     }
 
     public void updateEmployee(Account account){
@@ -59,7 +69,7 @@ public class AccountDetailsService implements UserDetailsService {
         if (accountRepository.findByEmail(account.getEmail()) == null){
             account.setPassword(passwordEncoder.encode(account.getUsername()));
             account.setStatus(false);
-            account.setTokenExpiredDate(getLocalDateTimeWithSeconds(15));
+            account.setTokenExpiredDate(getLocalDateTimeWithSeconds(60));
             account.setTokenLogin(RandomStringUtils.randomAlphanumeric(10));
             accountRepository.save(account);
             return account;
@@ -86,7 +96,7 @@ public class AccountDetailsService implements UserDetailsService {
             return "Token is invalid";
 
         accountService.setStatus(true);
-        accountService.setPassword(newPassword);
+        accountService.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(accountService);
         return null;
     }
@@ -94,5 +104,15 @@ public class AccountDetailsService implements UserDetailsService {
         LocalDateTime date = LocalDateTime.now();
         date = date.plusSeconds(seconds);
         return date;
+    }
+
+    public int numberOfEmployees(){
+        return (int) accountRepository.count();
+    }
+
+    public List<Account> pagination(int realPage){
+        List<Account> list = new ArrayList<Account>();
+        accountListingRepository.findAll(PageRequest.of(realPage,5)).forEach(list::add);
+        return list;
     }
 }

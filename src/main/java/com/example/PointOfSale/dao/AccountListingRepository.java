@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface AccountListingRepository extends PagingAndSortingRepository<Account, String> {
     List<Account> findAll();
-
-
 }
