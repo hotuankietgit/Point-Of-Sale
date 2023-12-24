@@ -100,14 +100,16 @@ public class AdminController {
     }
 
     @GetMapping("/edit")
-    public ModelAndView getEmployeeDetailPage(@RequestParam String username){
-        Account account = accountDetailsService.getEmployeeByUserame(username);
+    public ModelAndView getEmployeeDetailPage(@RequestParam String username, @RequestParam(required = false) String message, @RequestParam(required = false) String error){
+        Account account = accountDetailsService.getEmployeeByUsername(username);
         if (account == null){
             return new ModelAndView("error-404");
         }
 
         ModelAndView modelAndView = new ModelAndView("admin/detail");
         modelAndView.addObject("account", account);
+        modelAndView.addObject("message", message);
+        modelAndView.addObject("error", error);
         return modelAndView;
     }
 
@@ -120,6 +122,36 @@ public class AdminController {
         accountDetailsService.updateEmployee(account);
 
         model.addAttribute("username", account.getUsername());
+        return new ModelAndView("redirect:/admin/edit", model);
+    }
+
+    @PostMapping("/search")
+    public ModelAndView searchEmployee(@RequestParam String username){
+
+        List<Account> accounts = new ArrayList<>();
+        Account account = accountDetailsService.getEmployeeByUsername(username);
+        if (account == null){
+            return new ModelAndView("redirect:/admin/index");
+        }
+        accounts.add(account);
+        ModelAndView modelAndView = new ModelAndView("admin/search");
+        modelAndView.addObject("employees", accounts);
+        return modelAndView;
+    }
+
+    @PostMapping("/email")
+    public ModelAndView sendEmail(Account account, ModelMap model) throws MessagingException {
+        Account serviceAccount = accountDetailsService.resendEmail(account);
+        if (serviceAccount == null){
+            model.addAttribute("error", "An email cannot be sent because account has been activated");
+            model.addAttribute("username", account.getUsername());
+            return new ModelAndView("redirect:/admin/edit", model);
+        }
+
+        String url = "http://localhost:8080/staff/login?token=" + serviceAccount.getTokenLogin();
+        emailService.sendMimeEmail(serviceAccount, "Account activation", url);
+        model.addAttribute("username", account.getUsername());
+        model.addAttribute("message", "A link has been sent to the employee's email");
         return new ModelAndView("redirect:/admin/edit", model);
     }
 }

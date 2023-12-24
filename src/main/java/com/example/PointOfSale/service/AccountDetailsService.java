@@ -50,7 +50,7 @@ public class AccountDetailsService implements UserDetailsService {
         return accountRepository.findByEmail(email);
     }
 
-    public Account getEmployeeByUserame(String username){
+    public Account getEmployeeByUsername(String username){
         return accountRepository.getAccountByUsername(username);
     }
 
@@ -114,5 +114,21 @@ public class AccountDetailsService implements UserDetailsService {
         List<Account> list = new ArrayList<Account>();
         accountListingRepository.findAll(PageRequest.of(realPage,5)).forEach(list::add);
         return list;
+    }
+
+    public Account resendEmail(Account account){
+        Account accountRequest = accountRepository.getAccountByEmail(account.getUsername());
+        if (accountRequest == null){
+            return null;
+        }
+
+        accountRequest.setTokenLogin(RandomStringUtils.randomAlphanumeric(10));
+        accountRequest.setTokenExpiredDate(getLocalDateTimeWithSeconds(60));
+        if (accountRequest.isStatus()){
+            return null;
+        }
+
+        accountRepository.save(accountRequest);
+        return accountRequest;
     }
 }

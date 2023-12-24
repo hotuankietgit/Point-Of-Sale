@@ -25,7 +25,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Customers</a>
@@ -51,10 +51,6 @@
                 <a class="nav-link disabled" href="#">Disabled</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" action="/admin/search" method="POST">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="username">
-            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search by username</button>
-        </form>
     </div>
 </nav>
 
@@ -68,7 +64,6 @@
                         <h2>Manage <b>Employees</b></h2>
                     </div>
                     <div class="col-sm-6">
-                        <a href="/admin/register" class="btn btn-success"><i class="material-icons">&#xE147;</i> <span>Recruit New Employee</span></a>
                         <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
                     </div>
                 </div>
@@ -136,25 +131,6 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="clearfix">
-                <div class="hint-text">Showing <b th:text="${present}"></b> out of <b th:text="${total}"></b> entries</div>
-                <ul class="pagination">
-                    <th:block th:each="i: ${#numbers.sequence(0,6)}">
-                        <li th:if="${i} + 5*${offset} == ${mainPage}" class="page-item active">
-                            <a class="page-link" th:if="${i} == 0" th:text="Previous" th:href="@{/admin/index(page=${mainPage} - 1)}"></a>
-                            <a class="page-link" th:if="${i} != 0 and ${i} != 6" th:text="${i} + 5*${offset}" th:href="@{/admin/index(page=${i} + 5*${offset})}"></a>
-                            <a class="page-link" th:if="${i} == 6" th:text="Next" th:href="@{/admin/index(page=${mainPage} + 1)}"></a>
-                        </li>
-
-                        <li th:if="${i} + 5*${offset} != ${mainPage}" class="page-item">
-                            <a class="page-link" th:if="${i} == 0" th:text="Previous" th:href="@{/admin/index(page=${mainPage} - 1)}"></a>
-                            <a class="page-link" th:if="${i} != 0 and ${i} != 6" th:text="${i} + 5*${offset}" th:href="@{/admin/index(page=${i} + 5*${offset})}"></a>
-                            <a class="page-link" th:if="${i} == 6" th:text="Next" th:href="@{/admin/index(page=${mainPage} + 1)}"></a>
-                        </li>
-                    </th:block>
-                </ul>
-
-            </div>
         </div>
     </div>
 </div>

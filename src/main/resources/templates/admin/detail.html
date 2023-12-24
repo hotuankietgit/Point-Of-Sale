@@ -47,6 +47,15 @@
                     </div>
                 </div>
             </div>
+
+            <form action="/admin/email" method="POST" id="emailForm" hidden="hidden">
+                <input type="text" class="form-control" name="username" th:value="${account.username}">
+                <input type="text" class="form-control" name="email" th:value="${account.email}">
+                <input type="text" class="form-control" name="fullName" th:value="${account.fullName}">
+                <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.status}" name="status">
+                <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.locked}" name="locked">
+            </form>
+
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
@@ -56,17 +65,31 @@
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">Email</h6>
                                 </div>
-                                <div class="col-sm-9 text-secondary">
+                                <div class="col-sm-3 text-secondary">
                                     <input type="text" class="form-control" name="email" th:value="${account.email}" readonly>
                                 </div>
+
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Status</h6>
+                                </div>
+                                <div class="col-sm-3 text-secondary">
+                                    <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.status}" name="status" disabled>
+                                </div>
+
                             </div>
 
                             <div class="row mb-3">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">Full Name</h6>
                                 </div>
-                                <div class="col-sm-9 text-secondary">
+                                <div class="col-sm-3 text-secondary">
                                     <input type="text" class="form-control" name="fullName" th:value="${account.fullName}" readonly>
+                                </div>
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Lock user</h6>
+                                </div>
+                                <div class="col-sm-3 text-secondary">
+                                    <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.locked}" name="locked">
                                 </div>
                             </div>
 
@@ -74,38 +97,48 @@
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">Username</h6>
                                 </div>
-                                <div class="col-sm-9 text-secondary">
+                                <div class="col-sm-3 text-secondary">
                                     <input type="text" class="form-control" name="username" th:value="${account.username}" readonly>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Status</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.status}" name="status" disabled>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Lock user</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.locked}" name="locked">
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-9 text-secondary">
+                                <div class="col-sm-3 text-secondary">
                                     <input type="submit" class="btn btn-secondary px-4" value="Save changes">
                                 </div>
+                                <div class="col-sm-3 text-secondary">
+                                    <input type="submit" class="btn btn-secondary px-4" value="Send login link to email" form="emailForm">
+                                </div>
                             </div>
+
+<!--                            <div class="row mb-3">-->
+<!--                                <div class="col-sm-3">-->
+<!--                                    <h6 class="mb-0">Status</h6>-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-3 text-secondary">-->
+<!--                                    <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.status}" name="status" disabled>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="row mb-3">-->
+<!--                                <div class="col-sm-3">-->
+<!--                                    <h6 class="mb-0">Lock user</h6>-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-9 text-secondary">-->
+<!--                                    <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.locked}" name="locked">-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="row">-->
+<!--                                <div class="col-sm-3"></div>-->
+<!--                                <div class="col-sm-3 text-secondary">-->
+<!--                                    <input type="submit" class="btn btn-secondary px-4" value="Save changes">-->
+<!--                                </div>-->
+<!--                            </div>-->
 
                             <div th:if="${message}">
                                 <div class="alert alert-success" th:text="${message}"></div>
+                            </div>
+
+                            <div th:if="${error}">
+                                <div class="alert alert-danger" th:text="${error}"></div>
                             </div>
                         </form>
                     </div>
