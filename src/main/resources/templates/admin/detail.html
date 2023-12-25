@@ -69,11 +69,18 @@
                                     <input type="text" class="form-control" name="email" th:value="${account.email}" readonly>
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-1">
                                     <h6 class="mb-0">Status</h6>
                                 </div>
-                                <div class="col-sm-3 text-secondary">
+                                <div class="col-sm-1 text-secondary">
                                     <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.status}" name="status" disabled>
+                                </div>
+                                <div class="col-sm-1">
+                                    <h6 class="mb-0">Lock user</h6>
+                                </div>
+                                <div class="col-sm-1 text-secondary">
+                                    <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.locked}" name="locked">
+                                    <input class="btn btn-lg btn-toggle" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" name="locked" value="false" type="hidden">
                                 </div>
 
                             </div>
@@ -85,12 +92,25 @@
                                 <div class="col-sm-3 text-secondary">
                                     <input type="text" class="form-control" name="fullName" th:value="${account.fullName}" readonly>
                                 </div>
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Lock user</h6>
-                                </div>
-                                <div class="col-sm-3 text-secondary">
-                                    <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.locked}" name="locked">
-                                </div>
+
+                                <th:block th:each="role : ${roles}">
+                                    <div class="col-sm-1">
+                                        <h6 class="mb-0" th:text="${role.roleName}"></h6>
+                                    </div>
+                                    <div class="col-sm-1 text-secondary">
+                                        <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.roles.contains(role)}" name="roles">
+                                        <input class="btn btn-lg btn-toggle" type="hidden" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:value="role" name="roles">
+                                    </div>
+                                </th:block>
+
+<!--                                <div th:each="role : ${roles}">-->
+<!--                                    <div class="col-sm-1">-->
+<!--                                        <h6 class="mb-0" th:text="${role.roleName}"></h6>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-sm-1 text-secondary">-->
+<!--                                        <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.roles.contains(role)}" name="locked">-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
 
                             <div class="row mb-3">
@@ -100,10 +120,10 @@
                                 <div class="col-sm-3 text-secondary">
                                     <input type="text" class="form-control" name="username" th:value="${account.username}" readonly>
                                 </div>
-                                <div class="col-sm-3 text-secondary">
+                                <div class="col-lg-3 text-secondary">
                                     <input type="submit" class="btn btn-secondary px-4" value="Save changes">
                                 </div>
-                                <div class="col-sm-3 text-secondary">
+                                <div class="col-lg-3 text-secondary">
                                     <input type="submit" class="btn btn-secondary px-4" value="Send login link to email" form="emailForm">
                                 </div>
                             </div>

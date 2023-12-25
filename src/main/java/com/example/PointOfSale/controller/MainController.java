@@ -21,6 +21,21 @@ import java.util.Collection;
 @Controller
 @RequestMapping("")
 public class MainController {
+    @Autowired
+    AccountDetailsService accountDetailsService;
+    @GetMapping("/test")
+    public String getTest(){
+        Account account = accountDetailsService.getEmployeeByUsername("admin");
+        account.getRoles().forEach(System.out::println);
+        return "denied";
+    }
+
+    @PostMapping("/test")
+    public String postTest(){
+        Account account = accountDetailsService.getEmployeeByUsername("admin");
+        account.getRoles().forEach(System.out::println);
+        return "denied";
+    }
 
     @GetMapping("/home")
     public ModelAndView getHomePage(@AuthenticationPrincipal UserDetails userDetails){

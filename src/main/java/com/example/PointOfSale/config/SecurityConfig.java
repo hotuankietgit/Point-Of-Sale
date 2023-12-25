@@ -54,6 +54,18 @@ public class SecurityConfig {
                         .requestMatchers("/admin/*").hasAuthority("Admin")
                         .requestMatchers("/agent/*").hasAuthority("Agent")
                         .requestMatchers("/temp/*").hasAuthority("Agent")
+
+
+                        .requestMatchers("/products").hasAnyAuthority("Agent", "Admin")
+                        .requestMatchers("/products/*").hasAnyAuthority("Admin")
+                        .requestMatchers(HttpMethod.POST,"/products/add").hasAuthority("Admin")
+
+                        .requestMatchers("/categories").hasAuthority("Admin")
+                        .requestMatchers(HttpMethod.POST,"/categories/*").hasAuthority("Admin")
+
+                        // .requestMatchers("/viewSales/*").hasAnyAuthority("Agent", "Admin")
+                        // all totalAmount
+
                         .requestMatchers("/home").authenticated()
                         .requestMatchers(HttpMethod.POST,"/staff/login").permitAll()
                         .anyRequest().permitAll()).

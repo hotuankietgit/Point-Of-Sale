@@ -1,12 +1,13 @@
 package com.example.PointOfSale.controller;
 
 import com.example.PointOfSale.model.Account;
+import com.example.PointOfSale.model.Role;
 import com.example.PointOfSale.service.AccountDetailsService;
 import com.example.PointOfSale.service.EmailServiceImpl;
+import com.example.PointOfSale.service.RoleService;
 import com.example.PointOfSale.utils.FileStorageService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -19,7 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -32,6 +35,9 @@ public class AdminController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping("/home")
     public ModelAndView adminHomePage(Principal principal){
@@ -102,11 +108,14 @@ public class AdminController {
     @GetMapping("/edit")
     public ModelAndView getEmployeeDetailPage(@RequestParam String username, @RequestParam(required = false) String message, @RequestParam(required = false) String error){
         Account account = accountDetailsService.getEmployeeByUsername(username);
+        Set<Role> roles = roleService.getRoles();
+
         if (account == null){
             return new ModelAndView("error-404");
         }
 
         ModelAndView modelAndView = new ModelAndView("admin/detail");
+        modelAndView.addObject("roles", roles);
         modelAndView.addObject("account", account);
         modelAndView.addObject("message", message);
         modelAndView.addObject("error", error);
@@ -114,7 +123,11 @@ public class AdminController {
     }
 
     @PostMapping("/update")
-    public ModelAndView updateEmployee(@RequestParam MultipartFile file, Account account, ModelMap model){
+    public ModelAndView updateEmployee(@RequestParam MultipartFile file, Account account, ModelMap model, String[] roles){
+
+        System.out.println(account.getRoles());
+
+        System.out.println(Arrays.toString(roles));
 
         if (file != null && file.getSize() != 0){
             fileStorageService.storeImageToPublicFolder(file, account.getUsername());
@@ -142,6 +155,7 @@ public class AdminController {
     @PostMapping("/email")
     public ModelAndView sendEmail(Account account, ModelMap model) throws MessagingException {
         Account serviceAccount = accountDetailsService.resendEmail(account);
+
         if (serviceAccount == null){
             model.addAttribute("error", "An email cannot be sent because account has been activated");
             model.addAttribute("username", account.getUsername());
