@@ -4,6 +4,7 @@ import com.example.PointOfSale.model.Category;
 import com.example.PointOfSale.model.Product;
 import com.example.PointOfSale.model.ProductProfit;
 import com.example.PointOfSale.model.ProductProfitByDate;
+import com.example.PointOfSale.service.OrderItemService;
 import com.example.PointOfSale.service.categoryService;
 import com.example.PointOfSale.service.productService;
 import com.example.PointOfSale.utils.uploadImage;
@@ -33,31 +34,22 @@ import java.util.Optional;
 public class productController {
 
     @Autowired
-    private productService productService;
+    private   categoryService categoryService;
     @Autowired
-    private categoryService categoryService;
-
-
-
-    public productController(@Autowired productService productService){
-        this.productService = productService;
-    }
+    private productService productService;
+    @Autowired OrderItemService orderItemService;
 
     @GetMapping("")
-    public String showProducts(Model model, @AuthenticationPrincipal UserDetails userDetails){
+    public String showProducts(Model model){
 
-        return listByPage(model, 1, userDetails);
+        return listByPage(model, 1);
     }
 
     @GetMapping("/page/{pageNumber}")
-    public String listByPage(Model model, @PathVariable("pageNumber") int currentPage, @AuthenticationPrincipal UserDetails userDetails){
+    public String listByPage(Model model, @PathVariable("pageNumber") int currentPage){
         Page<Product> page = productService.getAll(currentPage);
         long totalItems = page.getTotalElements();
         int totalPages = page.getTotalPages();
-
-        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        //getAuthories = [object { role.getName } , object{ role.getName } ] //object co kieu GrantedAuthority
-        //    List<String> roles = ["Admin", "Agent"]
 
         List<Product> productList = page.getContent();
         model.addAttribute("currentPage", currentPage);
@@ -65,7 +57,7 @@ public class productController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("products", productList);
         model.addAttribute("present", productList.size());
-        model.addAttribute("roles", roles);
+
         return "index";
     }
 
@@ -82,20 +74,73 @@ public class productController {
     }
 
 
+    //    @PostMapping("/add")
+//    public String addProduct(Product product, @RequestParam("fileImage") MultipartFile multipartFile, Model model) throws IOException {
+//        if(!multipartFile.isEmpty()){
+//            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+//            product.setImage(fileName);
+//
+////            Optional<Product> optionalProduct = productService.findByBarcode(product.getBarcode());
+////            if(optionalProduct.isPresent()){
+////                model.addAttribute("Error", "Please enter another barcode");
+////                return "add";
+//////                return "redirect:/products/add";
+////            }
+//            Product addProduct = productService.add(product);
+//
+//
+//            String upload = "images";
+//            uploadImage.saveFile(upload, fileName, multipartFile);
+//        }
+//        else {
+//            if(product.getImage().isEmpty()){
+//                product.setImage(null);
+//                productService.add(product);
+//
+//            }
+//
+//        }
+//
+//        productService.add(product);
+//        return "redirect:/products";
+//    }
+//
+//
+//    @GetMapping("/edit/{id}")
+//    public String edit(@PathVariable("id") int id, Model model){
+//        try {
+//            Optional<Product> result = productService.findById(id);
+//
+//            if(result.isPresent()){
+//                Product product = result.get();
+//                String previousImage = product.getImage();
+//
+//
+//                model.addAttribute("pageTitle", "Edit Product");
+//                model.addAttribute("previousImage", previousImage);
+//
+//                List<Category> categories = categoryService.getCategory();
+//                model.addAttribute("categories", categories);
+//                model.addAttribute("product", product);
+//            }
+//            else{
+//                System.out.println("Don't see product");
+//            }
+//            return "add";
+//        }catch (Exception e){
+//            e.printStackTrace();
+//
+//            return "redirect:/products";
+//        }
+//
+//    }
     @PostMapping("/add")
-    public String addProduct(Product product, @RequestParam("fileImage") MultipartFile multipartFile, Model model) throws IOException {
+    public String addProduct(Product product, @RequestParam("fileImage") MultipartFile multipartFile) throws IOException {
         if(!multipartFile.isEmpty()){
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             product.setImage(fileName);
 
-            Optional<Product> optionalProduct = productService.findByBarcode(product.getBarcode());
-            if(optionalProduct.isPresent()){
-                model.addAttribute("Error", "Please enter another barcode");
-//                return "add";
-                return "redirect:/products/add";
-            }
             Product addProduct = productService.add(product);
-
             String upload = "images";
             uploadImage.saveFile(upload, fileName, multipartFile);
         }
@@ -122,10 +167,6 @@ public class productController {
                 Product product = result.get();
                 String previousImage = product.getImage();
 
-//                System.out.println(product.getCreationDate() );
-//                if (product.getCreationDate() == null) {
-//                    product.setCreationDate(LocalDate.now()); // Set it to the current date
-//                }
 
                 model.addAttribute("pageTitle", "Edit Product");
                 model.addAttribute("previousImage", previousImage);
@@ -147,16 +188,20 @@ public class productController {
 
     }
 
-
     @PostMapping("/remove")
     public String removePost(@RequestParam(value="options[]", required = false) String[] options){
         if (options == null){
             return "redirect:/products";
         }
+
+
         for (String option : options) {
 
             int productId = Integer.valueOf(option);
-
+            if(orderItemService.checkProductExist(productId)){
+//
+                return "redirect:/products?orderItemError=true";
+            }
             productService.deleteById(productId);
         }
         return "redirect:/products";

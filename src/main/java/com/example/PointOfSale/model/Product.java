@@ -37,7 +37,7 @@ public class Product {
     private LocalDate creationDate;
 
     private int quantity;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<OrderItems> orderItems;
 
