@@ -3,6 +3,7 @@ package com.example.PointOfSale.controller;
 import com.example.PointOfSale.model.Account;
 import com.example.PointOfSale.model.Role;
 import com.example.PointOfSale.service.AccountDetailsService;
+import com.example.PointOfSale.service.AccountService;
 import com.example.PointOfSale.service.EmailServiceImpl;
 import com.example.PointOfSale.service.RoleService;
 import com.example.PointOfSale.utils.FileStorageService;
@@ -19,16 +20,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     @Autowired
     private AccountDetailsService accountDetailsService;
+
+    @Autowired
+    private AccountService accountService;
 
     @Autowired
     private EmailServiceImpl emailService;
@@ -128,7 +129,7 @@ public class AdminController {
     }
 
     @PostMapping("/update")
-    public ModelAndView updateEmployee(@RequestParam MultipartFile file, Account account, ModelMap model, String[] roles){
+    public ModelAndView updateEmployee(@RequestParam MultipartFile file, Account account, ModelMap model,@RequestParam(value="roles[]", required = false) String[] roles){
 
         System.out.println(account.getRoles());
 
@@ -138,6 +139,23 @@ public class AdminController {
             fileStorageService.storeImageToPublicFolder(file, account.getUsername());
         }
         accountDetailsService.updateEmployee(account);
+
+        Account accountRequest = accountDetailsService.getEmployeeByUsername(account.getUsername());
+
+        if (roles == null){
+            accountRequest.getRoles().clear();
+            accountService.updateAccount(accountRequest);
+        } else {
+            accountRequest.getRoles().clear();
+            Set<Role> roleSet = new HashSet<>();
+            for (String roleName : roles){
+                Role role = roleService.getRoleByName(roleName);
+                roleSet.add(role);
+            }
+
+            accountRequest.setRoles(roleSet);
+            accountService.updateAccount(accountRequest);
+        }
 
         model.addAttribute("username", account.getUsername());
         return new ModelAndView("redirect:/admin/edit", model);

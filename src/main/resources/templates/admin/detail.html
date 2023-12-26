@@ -98,8 +98,8 @@
                                         <h6 class="mb-0" th:text="${role.roleName}"></h6>
                                     </div>
                                     <div class="col-sm-1 text-secondary">
-                                        <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.roles.contains(role)}" th:value="role" name="roles[]">
-                                        <input class="btn btn-lg btn-toggle" type="hidden" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:value="role" name="roles[]">
+                                        <input class="btn btn-lg btn-toggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:checked="${account.roles.contains(role)}" th:value="${role.getRoleName()}" name="roles[]">
+<!--                                        <input class="btn btn-lg btn-toggle" type="hidden" data-toggle="toggle" data-onstyle="success" data-offstyle="outline-danger" th:value="${role.getRoleName()}" name="roles[]">-->
                                     </div>
                                 </th:block>
 
