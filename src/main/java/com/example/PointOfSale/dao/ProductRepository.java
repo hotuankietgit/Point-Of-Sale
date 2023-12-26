@@ -10,7 +10,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface productRepository extends CrudRepository<Product, Integer> {
+public interface ProductRepository extends CrudRepository<Product, Integer> {
     List<Product> findAll();
 
     Product getProductById(int id);

@@ -1,7 +1,7 @@
 package com.example.PointOfSale.controller;
 
 import com.example.PointOfSale.model.Category;
-import com.example.PointOfSale.service.categoryService;
+import com.example.PointOfSale.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +15,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/categories")
-public class categoryController {
+public class CategoryController {
 
     @Autowired
-    private categoryService categoryService;
+    private CategoryService categoryService;
 
-    public categoryController(@Autowired categoryService categoryService){
+    public CategoryController(@Autowired CategoryService categoryService){
         this.categoryService = categoryService;
     }
 

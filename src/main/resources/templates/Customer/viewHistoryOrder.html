@@ -102,7 +102,7 @@
                             <td th:text="${order.paidAmount}"></td>
                             <td th:text="${order.balance}"></td>
                             <td th:text="${#dates.format(order.datePurchase, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                            <td th:text="${order.employee}"></td>
+                            <td th:text="${order.account.username}"></td>
 
                             <td>
                                 <a th:href="@{'/customers/viewDetail/' + ${order.orderId}}" class="detail">View Detail</a>

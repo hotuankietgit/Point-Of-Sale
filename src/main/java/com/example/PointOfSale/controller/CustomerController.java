@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import com.example.PointOfSale.service.productService;
+import com.example.PointOfSale.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class CustomerController {
 
     @Autowired private OrderItemService orderItemService;
 
-    @Autowired private productService productService;
+    @Autowired private ProductService productService;
     
     
 //    , @Autowired OrderItemService orderItemService
@@ -123,8 +123,11 @@ public class CustomerController {
         return "redirect:/customers";
     }
 
-    @GetMapping("order/{customerId}")
+    @GetMapping("/order/{customerId}")
     public String viewHistoryOrder(@PathVariable("customerId") int customerId, Model model){
+        System.out.println(customerId);
+
+
         List<Orders> orders = orderService.findOrderByCustomer(customerId);
         System.out.println(orders.size());
 //        List<OrderItems> orderItems = null;
@@ -143,7 +146,7 @@ public class CustomerController {
         return "Customer/viewHistoryOrder";
     }
 
-    @GetMapping("viewDetail/{orderId}")
+    @GetMapping("/viewDetail/{orderId}")
     public String viewDetail(@PathVariable("orderId") String orderId, Model model){
 
         System.out.println(orderId);

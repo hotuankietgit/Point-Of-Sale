@@ -9,10 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.example.PointOfSale.dao.productRepository;
+import com.example.PointOfSale.dao.ProductRepository;
 import com.example.PointOfSale.dao.OrderItemsRepository;
-import com.example.PointOfSale.dao.OrderRepository;
-import com.example.PointOfSale.dao.productPaging;
+import com.example.PointOfSale.dao.ProductPaging;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -20,12 +19,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class productService {
+public class ProductService {
     @Autowired
-    private productRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    private productPaging productPaging;
+    private ProductPaging productPaging;
     @Autowired
     private OrderItemsRepository orderItemsRepository;
 

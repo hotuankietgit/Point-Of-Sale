@@ -132,7 +132,7 @@ public class AdminController {
 
         System.out.println(account.getRoles());
 
-        System.out.println(Arrays.toString(roles));
+        System.out.println("Checkbox: " + Arrays.toString(roles));
 
         if (file != null && file.getSize() != 0){
             fileStorageService.storeImageToPublicFolder(file, account.getUsername());

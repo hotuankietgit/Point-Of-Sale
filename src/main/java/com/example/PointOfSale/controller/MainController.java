@@ -1,21 +1,18 @@
 package com.example.PointOfSale.controller;
 
 import com.example.PointOfSale.model.Account;
-import com.example.PointOfSale.model.AccountDetails;
 import com.example.PointOfSale.service.AccountDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.net.http.HttpRequest;
-import java.security.Principal;
 import java.util.Collection;
 
 @Controller
@@ -42,10 +39,10 @@ public class MainController {
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         for (GrantedAuthority authority : authorities){
             if (authority.getAuthority().equals("Admin")){
-                return new ModelAndView("/admin/home");
+                return new ModelAndView("redirect:/admin/index");
             }
         }
-        return new ModelAndView("/agent/home");
+        return new ModelAndView("redirect:/transaction");
     }
 
     @GetMapping("/login")

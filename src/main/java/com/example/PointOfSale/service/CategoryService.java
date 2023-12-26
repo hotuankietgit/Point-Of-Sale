@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class categoryService {
+public class CategoryService {
     @Autowired private CategoryRepository repo;
 
 

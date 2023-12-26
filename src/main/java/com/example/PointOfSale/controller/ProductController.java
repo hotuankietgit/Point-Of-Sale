@@ -5,8 +5,8 @@ import com.example.PointOfSale.model.Product;
 import com.example.PointOfSale.model.ProductProfit;
 import com.example.PointOfSale.model.ProductProfitByDate;
 import com.example.PointOfSale.service.OrderItemService;
-import com.example.PointOfSale.service.categoryService;
-import com.example.PointOfSale.service.productService;
+import com.example.PointOfSale.service.CategoryService;
+import com.example.PointOfSale.service.ProductService;
 import com.example.PointOfSale.utils.uploadImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.awt.print.Printable;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -31,25 +30,28 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/products")
-public class productController {
+public class ProductController {
 
     @Autowired
-    private   categoryService categoryService;
+    private CategoryService categoryService;
     @Autowired
-    private productService productService;
+    private ProductService productService;
     @Autowired OrderItemService orderItemService;
 
     @GetMapping("")
-    public String showProducts(Model model){
+    public String showProducts(Model model, @AuthenticationPrincipal UserDetails userDetails){
 
-        return listByPage(model, 1);
+        return listByPage(model, 1, userDetails);
     }
 
     @GetMapping("/page/{pageNumber}")
-    public String listByPage(Model model, @PathVariable("pageNumber") int currentPage){
+    public String listByPage(Model model, @PathVariable("pageNumber") int currentPage, @AuthenticationPrincipal UserDetails userDetails){
         Page<Product> page = productService.getAll(currentPage);
         long totalItems = page.getTotalElements();
         int totalPages = page.getTotalPages();
+
+        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        model.addAttribute("roles", roles);
 
         List<Product> productList = page.getContent();
         model.addAttribute("currentPage", currentPage);

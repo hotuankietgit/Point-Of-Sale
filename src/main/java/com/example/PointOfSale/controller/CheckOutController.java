@@ -4,7 +4,7 @@ import com.example.PointOfSale.model.*;
 import com.example.PointOfSale.service.AccountService;
 import com.example.PointOfSale.service.CustomerService;
 import com.example.PointOfSale.service.OrderService;
-import com.example.PointOfSale.service.productService;
+import com.example.PointOfSale.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +25,7 @@ public class CheckOutController {
   @Autowired
   private CustomerService customerService;
   @Autowired
-  private productService productService1;
+  private ProductService productService1;
   @Autowired
   private OrderService orderService;
   @Autowired AccountService accountService;

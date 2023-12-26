@@ -76,9 +76,9 @@
             <h2>Manage <b>Product</b></h2>
           </div>
           <div class="col-sm-6">
-            <a href="#deleteProductModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
-            <a th:href="@{/categories}" class="btn btn-primary"><i class="material-icons">&#xE147;</i> <span>Category</span></a>
-            <a th:href="@{/products/add}" class="btn btn-success"><i class="material-icons">&#xE147;</i> <span>Add New Product</span></a>
+            <a th:if="${roles.contains('Admin')}" href="#deleteProductModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
+            <a th:if="${roles.contains('Admin')}" th:href="@{/categories}" class="btn btn-primary"><i class="material-icons">&#xE147;</i> <span>Category</span></a>
+            <a th:if="${roles.contains('Admin')}" th:href="@{/products/add}" class="btn btn-success"><i class="material-icons">&#xE147;</i> <span>Add New Product</span></a>
 
           </div>
         </div>
@@ -122,8 +122,8 @@
           <td  th:text="${p.creationDate}"></td>
 
           <td>
-            <a th:href="@{'/products/edit/' + ${p.id}}" class="edit"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-            <a href="#deleteProductModal" class="delete" data-toggle="modal"><i id="deleteBtn" th:data-id="${p.id}" class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+            <a th:if="${roles.contains('Admin')}" th:href="@{'/products/edit/' + ${p.id}}" class="edit"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+            <a th:if="${roles.contains('Admin')}" href="#deleteProductModal" class="delete" data-toggle="modal"><i id="deleteBtn" th:data-id="${p.id}" class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
 
           </td>
         </tr>
