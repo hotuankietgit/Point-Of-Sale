@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Report data</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        #chart-container {
+            display: flex;
+        }
+
+        .chart {
+            width: 50%;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Profit of product</h1>
+    <div>
+        <label for="startDate1">Start Date:</label>
+        <input type="date" id="startDate1">
+        <label for="endDate1">End Date:</label>
+        <input type="date" id="endDate1">
+        <button onclick="fetchProductProfitData()">Get Data</button>
+    </div>
+    <div id="productProfitChart" class="chart"></div>
+
+    <h1>Total Profit by Date</h1>
+    <div>
+        <label for="startDate2">Start Date:</label>
+        <input type="date" id="startDate2">
+        <label for="endDate2">End Date:</label>
+        <input type="date" id="endDate2">
+        <button onclick="fetchTotalProfitByDate()">Get Data</button>
+    </div>
+    <div id="totalProfitByDateChart" class="chart"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var today = new Date();
+            var firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+            document.getElementById('startDate1').valueAsDate = firstDayOfMonth;
+            document.getElementById('endDate1').valueAsDate = today;
+            document.getElementById('startDate2').valueAsDate = firstDayOfMonth;
+            document.getElementById('endDate2').valueAsDate = today;
+
+            fetchProductProfitData();
+            fetchTotalProfitByDate();
+        });
+
+        function renderProductProfitChart(labels, profits) {
+            var options = {
+                chart: {
+                    type: 'bar',
+                    title: `Profit of Products`
+                },
+                series: [{
+                    name: 'Profit',
+                    data: profits
+                }],
+                xaxis: {
+                    categories: labels
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#productProfitChart"), options);
+            chart.render();
+        }
+
+        function renderTotalProfitByDateChart(labels, profits) {
+            var options = {
+                chart: {
+                    type: 'line',
+                    title: `Total Profit by Date`
+                },
+                series: [{
+                    name: 'Total Profit',
+                    data: profits
+                }],
+                xaxis: {
+                    categories: labels
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#totalProfitByDateChart"), options);
+            chart.render();
+        }
+
+        function fetchProductProfitData() {
+            var startDate = document.getElementById('startDate1').value;
+            var endDate = document.getElementById('endDate1').value;
+
+            $.ajax({
+                type: 'GET',
+                url: "/products/profits",
+                data: { startDate: startDate, endDate: endDate },
+                success: function (data) {
+                    var labels = data.map(function (item) { return item.productName; });
+                    var profits = data.map(function (item) { return item.profit; });
+
+                    renderProductProfitChart(labels, profits);
+                },
+                error: function (error) {
+                    console.log("Error fetching product profit data:", error);
+                }
+            });
+        }
+
+        function fetchTotalProfitByDate() {
+            var startDate = document.getElementById('startDate2').value;
+            var endDate = document.getElementById('endDate2').value;
+
+            $.ajax({
+                type: 'GET',
+                url: "/products/profits-by-date",
+                data: { startDate: startDate, endDate: endDate },
+                success: function (data) {
+                    var labels = data.map(function (item) { return item.date; });
+                    var profits = data.map(function (item) { return item.totalProfit; });
+
+                    renderTotalProfitByDateChart(labels, profits);
+                },
+                error: function (error) {
+                    console.log("Error fetching total profit by date data:", error);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -2,11 +2,16 @@ package com.example.PointOfSale.controller;
 
 import com.example.PointOfSale.model.Category;
 import com.example.PointOfSale.model.Product;
+import com.example.PointOfSale.model.ProductProfit;
+import com.example.PointOfSale.model.ProductProfitByDate;
 import com.example.PointOfSale.service.categoryService;
 import com.example.PointOfSale.service.productService;
 import com.example.PointOfSale.utils.uploadImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.awt.print.Printable;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,4 +161,32 @@ public class productController {
         }
         return "redirect:/products";
     }
+
+    @GetMapping("/profits")
+    public ResponseEntity<List<ProductProfit>> getProfitData(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String endDate) {
+
+        // Convert String to java.sql.Date
+        Date startDateSql = Date.valueOf(startDate);
+        Date endDateSql = Date.valueOf(endDate);
+
+        List<ProductProfit> productProfits = productService.getProductProfits(startDateSql, endDateSql);
+        
+        return new ResponseEntity<>(productProfits, HttpStatus.OK);
+    }
+    @GetMapping("/profits-by-date")
+    public ResponseEntity<List<ProductProfitByDate>> getProfitDataByDate(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String endDate) {
+
+        // Convert String to java.sql.Date
+        Date startDateSql = Date.valueOf(startDate);
+        Date endDateSql = Date.valueOf(endDate);
+
+        List<ProductProfitByDate> productProfits = productService.getTotalProfitsByDate(startDateSql, endDateSql);
+
+        return new ResponseEntity<>(productProfits, HttpStatus.OK);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.PointOfSale.controller;
 
 import com.example.PointOfSale.model.*;
+import com.example.PointOfSale.service.AccountService;
 import com.example.PointOfSale.service.CustomerService;
 import com.example.PointOfSale.service.OrderService;
 import com.example.PointOfSale.service.productService;
@@ -27,6 +28,8 @@ public class CheckOutController {
   private productService productService1;
   @Autowired
   private OrderService orderService;
+  @Autowired AccountService accountService;
+  
 
   @PostMapping("/checkout")
   public View handleCheckout(@RequestBody CheckoutData data, @AuthenticationPrincipal UserDetails userDetails) {
@@ -63,6 +66,7 @@ public class CheckOutController {
     orders.setTotalAmount(totalAmount);
     orders.setBalance(balance);
     orders.setPaidAmount(paidAmount);
+  
 
     List<OrderItems> itemsList = new ArrayList<>();
     for (ProductData i : productData) {
@@ -83,12 +87,15 @@ public class CheckOutController {
       orderItems.setQuantity(quantity);
       orderItems.setProduct(product);
       orderItems.setOrders(orders);
+      Account account = accountService.getAccountByUsername(data.getEmployeeId());
+     
 
       System.out.println("Test OrderItem has a right Product: " + orderItems.getProduct());
       itemsList.add(orderItems);
     }
 
     orders.setOrderItems(itemsList);
+    orders.setAccount(accountService.getAccountByUsername(data.getEmployeeId()));
     Date currentDate = new Date();
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
