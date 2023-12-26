@@ -1,7 +1,9 @@
 package com.example.PointOfSale.service;
 
+import com.example.PointOfSale.dao.AccountRepository;
 import com.example.PointOfSale.dao.CustomerPaging;
 import com.example.PointOfSale.dao.CustomerRepository;
+import com.example.PointOfSale.model.Account;
 import com.example.PointOfSale.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +18,7 @@ import java.util.Optional;
 public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
-
+   
     @Autowired
     private CustomerPaging customerPaging;
 
@@ -46,6 +48,5 @@ public class CustomerService {
     public void deleteById(int id) {
         customerRepository.deleteById(id);
     }
-
-
-}
+    
+   }

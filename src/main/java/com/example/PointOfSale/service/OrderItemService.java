@@ -20,4 +20,8 @@ public class OrderItemService {
     public List<OrderItems> findOrderItemsByOrderId(String orderId){
         return orderItemsRepository.findByOrders_OrderId(orderId);
     }
+
+    public boolean checkProductExist(int productId){
+        return orderItemsRepository.existsByProductId(productId);
+    }
 }

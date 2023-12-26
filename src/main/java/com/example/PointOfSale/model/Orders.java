@@ -30,10 +30,14 @@ public class Orders {
   @CreatedDate
   @Temporal(TemporalType.TIMESTAMP)
   private Date datePurchase;
+//  @ManyToOne
+//  @JoinColumn(name = "employee_id")
+//  @JsonIdentityReference(alwaysAsId = true)
+//  private Employee employee;// email
   @ManyToOne
   @JoinColumn(name = "employee_id")
   @JsonIdentityReference(alwaysAsId = true)
-  private Employee employee;// email
+  private Account account;
 
   @ManyToOne
   @JoinColumn(name = "customerID")

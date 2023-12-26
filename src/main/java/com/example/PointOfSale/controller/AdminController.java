@@ -38,6 +38,11 @@ public class AdminController {
 
     @Autowired
     private RoleService roleService;
+    
+    @GetMapping("/report")
+    public String reportPage( ) {
+    	return "report/report";
+    }
 
     @GetMapping("/home")
     public ModelAndView adminHomePage(Principal principal){

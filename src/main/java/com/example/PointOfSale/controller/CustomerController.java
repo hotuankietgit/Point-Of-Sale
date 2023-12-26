@@ -29,6 +29,8 @@ public class CustomerController {
     @Autowired private OrderItemService orderItemService;
 
     @Autowired private productService productService;
+    
+    
 //    , @Autowired OrderItemService orderItemService
     public CustomerController(@Autowired CustomerService customerService, @Autowired OrderService orderService, @Autowired OrderItemService orderItemService){
         this.customerService = customerService;

@@ -5,6 +5,9 @@ import com.example.PointOfSale.model.Product;
 import com.example.PointOfSale.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.example.PointOfSale.service.productService;
 
+import jakarta.persistence.CollectionTable;
+
+import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +45,16 @@ public class transactionController {
 
 
     @GetMapping("")
-    public String viewCart(Model model){
-
+    public String viewCart(Model model, Principal principal){
+    	
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    	String username = auth.getName();
+    	Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+    	String role = authorities.toArray()[0].toString(); // role duy nhat
+    	
+    	model.addAttribute("username", username);
+    	model.addAttribute("role", role);
+    	
 
         model.addAttribute("cart", cart);
         int total = 0;

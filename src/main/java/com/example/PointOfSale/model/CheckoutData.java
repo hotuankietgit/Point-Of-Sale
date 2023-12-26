@@ -18,6 +18,7 @@ public class CheckoutData {
   private String phoneNumber;
   private String paidAmount;
   private String balance;
+  private String employeeId;
 
   @JsonAlias("productData")
   private String productDataJson;

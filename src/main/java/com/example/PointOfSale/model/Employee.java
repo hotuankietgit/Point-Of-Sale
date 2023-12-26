@@ -27,7 +27,7 @@ public class Employee {
   private String ExpiredDate; // format dmy
   private boolean active;
   private boolean block;
-  @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonBackReference
-  private List<Orders> orders;
+//  @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+//  @JsonBackReference
+//  private List<Orders> orders;
 }
